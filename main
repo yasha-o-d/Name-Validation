@@ -1,0 +1,71 @@
+//
+//  main.cpp
+//  Jesse's First Challenge
+//
+//  Created by Yasha Ormut Durbin on 1/1/18.
+//  Copyright © 2018 Yasha Ormut Durbin. All rights reserved.
+//
+
+#include <iostream>
+#include <string.h>
+using namespace std;
+
+int main() {
+    bool validIn = false;                           // Logical for outer while-loop
+    bool midName = false;
+    string userName;                                // Initialize username
+    int secondIndex = 0;
+    int firstIndex = 0;
+
+    
+    while (!validIn) {
+        cout << "What is your name?" << endl;       // Prints request explanation
+        getline(cin, userName);                      // Requests user input for name
+
+        bool stillFine = true;                      // Logical for inner while-loop
+        int i = 0;                                  // Index for inner while-loop
+        
+        while (stillFine && userName[i]){            // userName[i] is true until length is exceeded
+            if (isalpha(userName[i])){
+                i++;}                               // Increments i when the character is valid
+            else if (userName[i] == ' '){
+                i++;
+                if (midName){
+                    firstIndex = secondIndex;}
+                secondIndex = i;
+                midName = true;
+            }
+            else{
+                stillFine = false;}                 // False-ifies inner while-loop logical
+        }
+        
+        // Corrects uncapitalized first name
+        if (islower(userName[0])){
+            userName[0] = userName[0] - 'a' + 'A';
+        }
+        
+        // Displays and Stuff
+        if (secondIndex != 0){                       // Space in name >> assume both first and last names provided
+            if (stillFine){
+                    if (islower(userName[secondIndex])){
+                        userName[secondIndex] = userName[secondIndex] - 'a' + 'A';}
+                string firstName = userName.substr(0, firstIndex-1);
+                string lastName = userName.substr(secondIndex, i-secondIndex);
+                cout << "Your first name is " << firstName << " and your last name is " << lastName << "." << endl;
+                validIn = true;}
+            else{
+                cout << "The first invalid character, " << userName[i] << ", is located at index " << i+1 << "." << endl;}
+        }
+        else{                                       // No space --> assume only first name provided
+            if (stillFine){
+                cout << "The name is valid, you get a cookie!" << endl;
+                string firstName = userName.substr(0, i);
+                cout << "Your first name is " << firstName << ", no last name was provided." << endl;
+                validIn = true;}
+            else{
+                cout << "The first invalid character is located at index " << i+1 << "." << endl;
+            }
+        }
+    }
+    return 0;
+}
